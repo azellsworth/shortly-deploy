@@ -7,6 +7,9 @@ iisnode.yml
 # Ignore node modules
 node_modules
 
+# Ignore dist files
+public/dist
+
 # Icon must ends with two \r.
 Icon
 
