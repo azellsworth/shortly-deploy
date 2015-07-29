@@ -1,8 +1,25 @@
 module.exports = function(grunt) {
 
+  var clientJS = ['public/client/app.js', 
+                  'public/client/link.js', 
+                  'public/client/links.js',
+                  'public/client/linkView.js',
+                  'public/client/linksView.js',
+                  'public/client/createLinkView.js',
+                  'public/client/router.js'
+                  ];
+
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {
+        separator: ';\n'
+      },
+      dist: {
+        src: clientJS,
+        dest: 'public/dist/scripts/app.js',
+      },
     },
 
     mochaTest: {
@@ -21,12 +38,18 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      options: {
+        screwIE8: true
+      },
+      my_target: {
+        files: {
+          'public/dist/scripts/app.min.js': ['public/dist/scripts/app.js']
+        }
+      }
     },
 
     jshint: {
-      files: [
-        // Add filespec list here
-      ],
+      uses_defaults: ['public/**/*.js'],
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
@@ -38,7 +61,15 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
-        // Add filespec list here
+      target: {
+        files: [{
+          expand: true,
+          cwd: 'public',
+          src: ['*.css', '!*.min.css'],
+          dest: 'public/dist/styles',
+          ext: '.min.css'
+        }]
+      }
     },
 
     watch: {
@@ -60,6 +91,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        
       }
     },
   });
@@ -91,22 +123,28 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
+    'jshint',
     'mochaTest'
   ]);
 
   grunt.registerTask('build', [
+    'test',
+    'concat',
+    'uglify',
+    'cssmin'
   ]);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      // call the  bash scripts above...
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
   grunt.registerTask('deploy', [
-      // add your production server task here
+    // add your production server task here
   ]);
 
 
