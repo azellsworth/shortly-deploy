@@ -137,7 +137,6 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'test',
     'concat',
     'uglify',
     'cssmin'
@@ -154,6 +153,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
     // add your production server task here
+    'test',
     'build',
     'upload'
   ]);
