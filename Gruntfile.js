@@ -83,6 +83,15 @@ module.exports = function(grunt) {
           'uglify'
         ]
       },
+      serverTests: {
+        files: [
+          'app/**/*.js',
+          'test/*.js'
+        ],
+        tasks: [
+          'test'
+        ]
+      },
       css: {
         files: 'public/*.css',
         tasks: ['cssmin']

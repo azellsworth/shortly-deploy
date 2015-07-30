@@ -10,6 +10,9 @@ node_modules
 # Ignore dist files
 public/dist
 
+# Ignore db
+db
+
 # Icon must ends with two \r.
 Icon
 
