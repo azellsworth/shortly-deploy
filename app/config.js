@@ -6,7 +6,9 @@ var db = mongoose.connection;
 
 // connect
 // TODO: configure for local/production variables
-mongoose.connect('mongodb://localhost/db');
+
+var connectionString = process.env.CUSTOMCONNSTR_MONGOLAB_URI;
+mongoose.connect(connectionString || 'mongodb://localhost/db');
 
 // handle errors
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -37,6 +39,12 @@ db.userSchema.pre('save', function(next) {
   }
 });
 
+db.userSchema.methods.comparePassword = function(attemptedPassword, callback) {
+  bcrypt.compare(attemptedPassword, this.password, function(err, isMatch) {
+    callback(isMatch);
+  });
+};
+
 // link schema
 db.linkSchema = new Schema({
   url: String,
@@ -54,11 +62,13 @@ db.linkSchema.pre('save', function(next){
   if(!this.created_at) this.created_at = currentDate;
   this.updated_at = currentDate;
 
-  // handle code
+  // handle code and visits
   if (this.isNew) {
     var shasum = crypto.createHash('sha1');
     shasum.update(this.url);
     this.code = shasum.digest('hex').slice(0, 5);
+
+    this.visits = 0;
   }
 
   next();

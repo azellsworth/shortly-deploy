@@ -1,7 +1,7 @@
 Shortly.LinksView = Backbone.View.extend({
   className: 'links',
 
-  initialize: function(){
+  initialize: function(){ // Possibly console log on sync to see data
     this.collection.on('sync', this.addAll, this);
     this.collection.fetch();
   },
@@ -12,6 +12,7 @@ Shortly.LinksView = Backbone.View.extend({
   },
 
   addAll: function(){
+    console.log(this.collection);
     this.collection.forEach(this.addOne, this);
   },
 
